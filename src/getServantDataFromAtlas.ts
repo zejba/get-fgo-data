@@ -63,9 +63,10 @@ function parseClassPassive(skill: Skill) {
       const usedForCalcBuff = usedForCalcBuffs.find((b) => b.id === buff.id);
       if (!usedForCalcBuff) return [];
       const lastSval = func.svals[func.svals.length - 1]!;
+      const value = usedForCalcBuff.type === 'damagePlus' ? lastSval.Value : lastSval.Value / 10;
       return {
         type: usedForCalcBuff.type,
-        value: lastSval.Value / 10,
+        value,
         turn: lastSval.Turn,
         count: lastSval.Count
       };
