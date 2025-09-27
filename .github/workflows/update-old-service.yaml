@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. このリポジトリをチェックアウト&依存関係インストール
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -20,19 +19,26 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 2. zejba/fgotdamageroadmap をtarget_repository配下にチェックアウト
+      # App認証トークンの取得
+      - name: Generate GitHub App token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: zejba
+          repositories: fgotdamageroadmap
+
+      # zejba/fgotdamageroadmap をtarget_repository配下にチェックアウト
       - name: Checkout target repository
         uses: actions/checkout@v4
         with:
           repository: zejba/fgotdamageroadmap
           path: target_repository
-          token: ${{ github.token }}
 
-      # 3. npx tsx src/updateOldServantsCsv.ts を実行する
       - name: Run update script
         run: npx tsx src/updateOldServantsCsv.ts
 
-      # 4. zejba/fgotdamageroadmap にcommit, push
       - name: Commit and push changes
         run: |
           cd target_repository
@@ -46,4 +52,4 @@ jobs:
             git push
           fi
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
