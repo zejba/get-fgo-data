@@ -1,6 +1,7 @@
 name: Update Old Servants CSV
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 12 * * *' # 毎日JSTの21時に実行
 
