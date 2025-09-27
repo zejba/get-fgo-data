@@ -1,0 +1,53 @@
+name: Update Old Servants CSV
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-csv:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. このリポジトリをチェックアウト&依存関係インストール
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      # 2. zejba/fgotdamageroadmap をtarget_repository配下にチェックアウト
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          repository: zejba/fgotdamageroadmap
+          path: target_repository
+          token: ${{ github.token }}
+
+      # 3. npx tsx src/updateOldServantsCsv.ts を実行する
+      - name: Run update script
+        run: npx tsx src/updateOldServantsCsv.ts
+
+      # 4. zejba/fgotdamageroadmap にcommit, push
+      - name: Configure Git
+        run: |
+          cd target_repository
+          git config --local user.email "66516617+zejba@users.noreply.github.com"
+          git config --local user.name "zejba"
+
+      - name: Commit and push changes
+        run: |
+          cd target_repository
+          git add data/servant_data.csv
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update Servants CSV data"
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
