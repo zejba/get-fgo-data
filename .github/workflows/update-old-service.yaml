@@ -33,15 +33,11 @@ jobs:
         run: npx tsx src/updateOldServantsCsv.ts
 
       # 4. zejba/fgotdamageroadmap にcommit, push
-      - name: Configure Git
+      - name: Commit and push changes
         run: |
           cd target_repository
           git config --local user.email "66516617+zejba@users.noreply.github.com"
           git config --local user.name "zejba"
-
-      - name: Commit and push changes
-        run: |
-          cd target_repository
           git add data/servant_data.csv
           if git diff --staged --quiet; then
             echo "No changes to commit"
