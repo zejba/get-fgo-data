@@ -29,7 +29,7 @@ function parseServant(data: NiceJpServant): ParsedServant {
       arts: data.hitsDistribution.arts.length,
       quick: data.hitsDistribution.quick.length,
       extra: data.hitsDistribution.extra.length,
-      np: lastNoblePhantasm.npDistribution.length
+      np: damageNp ? lastNoblePhantasm.npDistribution.length : 0
     },
     noblePhantasm: {
       card: lastNoblePhantasm.card,
@@ -56,7 +56,8 @@ function combineClassPassive(passives: ParsedServant['classPassive']) {
 
 function parseClassPassive(skill: Skill) {
   const funcs = skill.functions.filter(
-    (f) => ['self', 'ptAll'].includes(f.funcTargetType) && ['player', 'playerAndEnemy'].includes(f.funcTargetTeam)
+    (f) =>
+      ['self', 'ptAll', 'ptFull'].includes(f.funcTargetType) && ['player', 'playerAndEnemy'].includes(f.funcTargetTeam)
   );
   return funcs.flatMap((func) => {
     return func.buffs.flatMap((buff) => {
