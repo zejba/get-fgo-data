@@ -7,15 +7,62 @@ export async function getServantDataFromAtlas(collectionNo: number) {
   if (response.status === 404) return null;
   if (!response.ok) throw new Error('Failed to fetch servant data');
   const data = (await response.json()) as NiceJpServant;
-  return parseServant(data);
+  const nps = getNoblePhantasms(data.noblePhantasms);
+  if (nps.size === 1) {
+    return [parseServant(data, Array.from(nps.values())[0]!, data.id.toString(), undefined)];
+  }
+  let result: ParsedServant[] = [];
+  let index = 1;
+  for (const [key, np] of nps) {
+    const id = `${data.id}-${index}`;
+    index++;
+    result.push(parseServant(data, np, id, key));
+  }
+  return result;
 }
 
-function parseServant(data: NiceJpServant): ParsedServant {
-  const lastNoblePhantasm = data.noblePhantasms[data.noblePhantasms.length - 1]!;
-  const damageNp = lastNoblePhantasm.functions.find((f) => f.funcType.startsWith('damageNp'));
+// 色・単体/全体の組み合わせで最も高いダメージを与えるNPを取得
+function getNoblePhantasms(noblePhantasms: NiceJpServant['noblePhantasms']) {
+  const nps: Map<string, NiceJpServant['noblePhantasms'][number]> = new Map();
+
+  for (const np of noblePhantasms) {
+    const npFunc = np.functions.find((f) => f.funcType.startsWith('damageNp'));
+    if (!npFunc) {
+      continue;
+    }
+    const color = np.card === 'buster' ? 'B' : np.card === 'arts' ? 'A' : np.card === 'quick' ? 'Q' : 'E';
+    const target = npFunc.funcTargetType === 'enemy' ? '単' : '全';
+    const key = `${color}${target}`;
+    const existingNp = nps.get(key);
+    if (!existingNp) {
+      nps.set(key, np);
+    }
+    const npValue = npFunc.svals[npFunc.svals.length - 1]!.Value;
+    const existingNpValue = existingNp
+      ? (existingNp.functions.find((f) => f.funcType.startsWith('damageNp'))?.svals.slice(-1)[0]?.Value ?? 0)
+      : 0;
+    if (npValue > existingNpValue) {
+      nps.set(key, np);
+    }
+  }
+  if (nps.size === 0 && noblePhantasms.length > 0) {
+    nps.set('補助', noblePhantasms[noblePhantasms.length - 1]!);
+  }
+  return nps;
+}
+
+function parseServant(
+  data: NiceJpServant,
+  noblePhantasm: NiceJpServant['noblePhantasms'][number],
+  id: string,
+  anotherVersionName: string | undefined
+): ParsedServant {
+  const damageNp = noblePhantasm.functions.find((f) => f.funcType.startsWith('damageNp'));
   return {
-    id: data.id,
+    aaId: data.id,
+    id,
     collectionNo: data.collectionNo,
+    anotherVersionName,
     name: data.name,
     rarity: data.rarity,
     className: data.className.startsWith('beast') ? 'beast' : data.className,
@@ -23,16 +70,16 @@ function parseServant(data: NiceJpServant): ParsedServant {
     atkMax: data.atkMax,
     atk120: data.atkGrowth[data.atkGrowth.length - 1]!,
     starGen: data.starGen / 10,
-    npGain: lastNoblePhantasm.npGain.np[0]! / 100,
+    npGain: noblePhantasm.npGain.np[0]! / 100,
     hitCounts: {
       buster: data.hitsDistribution.buster.length,
       arts: data.hitsDistribution.arts.length,
       quick: data.hitsDistribution.quick.length,
       extra: data.hitsDistribution.extra.length,
-      np: damageNp ? lastNoblePhantasm.npDistribution.length : 0
+      np: damageNp ? noblePhantasm.npDistribution.length : 0
     },
     noblePhantasm: {
-      card: lastNoblePhantasm.card,
+      card: noblePhantasm.card,
       value: (damageNp?.svals[damageNp.svals.length - 1]!.Value ?? 0) / 10
     },
     classPassive: combineClassPassive(data.classPassive.flatMap(parseClassPassive))

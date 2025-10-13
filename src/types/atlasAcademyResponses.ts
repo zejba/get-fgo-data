@@ -23,6 +23,7 @@ interface NpSVal {
 
 interface NpFunction {
   funcType: string;
+  funcTargetType: string;
   svals: NpSVal[];
 }
 

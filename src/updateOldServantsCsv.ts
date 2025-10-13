@@ -17,8 +17,13 @@ async function updateOldServantsCsv() {
   for (let collectionNo = parseInt(lastId) + 1; ; collectionNo++) {
     const servantData = await getServantDataFromAtlas(collectionNo);
     if (!servantData) break;
-    console.log('新しいサーヴァントを取得:', servantData.name);
-    newData.push(convertToCsvLine(servantData));
+    console.log('新しいサーヴァントを取得:', servantData.map((s) => s.name).join(', '));
+    newData.push(
+      ...servantData.map((s, index) => {
+        const collectionNo2 = servantData.length > 1 ? `${collectionNo}-${index + 1}` : collectionNo.toString();
+        return convertToCsvLine(s, collectionNo2);
+      })
+    );
   }
 
   if (newData.length === 0) {
@@ -44,10 +49,10 @@ async function updateOldServantsCsv() {
   console.log(`CSVファイルを更新しました: ${newData.length}件の新しいサーヴァントを追加`);
 }
 
-function convertToCsvLine(servantData: ParsedServant): string[] {
+function convertToCsvLine(servantData: ParsedServant, collectionNo: string): string[] {
   return [
-    servantData.collectionNo.toString(),
-    servantData.name,
+    collectionNo,
+    servantData.anotherVersionName ? `${servantData.name}(${servantData.anotherVersionName})` : servantData.name,
     servantData.rarity.toString(),
     servantData.className === 'moonCancer'
       ? 'mooncancer'

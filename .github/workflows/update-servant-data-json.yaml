@@ -1,0 +1,56 @@
+name: Update FGO Damage Roadmap Servant Data JSON
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * *' # 毎日JSTの21時に実行
+
+jobs:
+  update-csv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      # App認証トークンの取得
+      - name: Generate GitHub App token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: zejba
+          repositories: fgo-damage-roadmap
+
+      # zejba/fgo-damage-roadmap をtarget_repository配下にチェックアウト
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          repository: zejba/fgo-damage-roadmap
+          path: target_repository
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Run update script
+        run: npx tsx src/updateServantDataJson.ts
+
+      - name: Commit and push changes
+        run: |
+          cd target_repository
+          git config --local user.email "66516617+zejba@users.noreply.github.com"
+          git config --local user.name "zejba"
+          git add data/servant_data.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update Servant Data JSON"
+            git push
+          fi

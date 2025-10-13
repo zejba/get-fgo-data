@@ -1,6 +1,8 @@
 export type ParsedServant = {
-  id: number;
+  aaId: number;
+  id: string;
   collectionNo: number;
+  anotherVersionName?: string;
   name: string;
   rarity: number;
   className: string;
