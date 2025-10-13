@@ -2,7 +2,7 @@ import { getServantDataFromAtlas } from './getServantDataFromAtlas';
 import { ParsedServant } from './types/others';
 import fs from 'fs';
 
-const path = 'target_repository/data/servant_data.json';
+const path = 'target_repository/src/data/servant_data.json';
 
 async function main() {
   const oldJson = fs.readFileSync(path, 'utf-8');
