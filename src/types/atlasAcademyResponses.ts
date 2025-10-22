@@ -28,7 +28,7 @@ interface NpFunction {
 }
 
 interface NoblePhantasm {
-  card: string;
+  card: '1' | '2' | '3';
   npGain: {
     np: number[];
   };

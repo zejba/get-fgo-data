@@ -30,7 +30,7 @@ function getNoblePhantasms(noblePhantasms: NiceJpServant['noblePhantasms']) {
     if (!npFunc) {
       continue;
     }
-    const color = np.card === 'buster' ? 'B' : np.card === 'arts' ? 'A' : np.card === 'quick' ? 'Q' : 'E';
+    const color = np.card === '2' ? 'B' : np.card === '1' ? 'A' : 'Q';
     const target = npFunc.funcTargetType === 'enemy' ? '単' : '全';
     const key = `${color}${target}`;
     const existingNp = nps.get(key);
@@ -79,7 +79,7 @@ function parseServant(
       np: damageNp ? noblePhantasm.npDistribution.length : 0
     },
     noblePhantasm: {
-      card: noblePhantasm.card,
+      card: noblePhantasm.card === '2' ? 'buster' : noblePhantasm.card === '1' ? 'arts' : 'quick',
       value: (damageNp?.svals[damageNp.svals.length - 1]!.Value ?? 0) / 10
     },
     classPassive: combineClassPassive(data.classPassive.flatMap(parseClassPassive))
