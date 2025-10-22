@@ -53,10 +53,10 @@ export interface NiceJpServant {
   atkGrowth: number[];
   starGen: number;
   hitsDistribution: {
-    buster: number[];
-    arts: number[];
-    quick: number[];
-    extra: number[];
+    1: number[]; // arts
+    2: number[]; // buster
+    3: number[]; // quick
+    4: number[]; // extra
   };
   cards: string[];
   noblePhantasms: NoblePhantasm[];

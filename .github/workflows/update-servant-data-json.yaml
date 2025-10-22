@@ -6,7 +6,7 @@ on:
     - cron: '0 12 * * *' # 毎日JSTの21時に実行
 
 jobs:
-  update-csv:
+  update-json:
     runs-on: ubuntu-latest
 
     steps:

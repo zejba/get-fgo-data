@@ -72,10 +72,10 @@ function parseServant(
     starGen: data.starGen / 10,
     npGain: noblePhantasm.npGain.np[0]! / 100,
     hitCounts: {
-      buster: data.hitsDistribution.buster.length,
-      arts: data.hitsDistribution.arts.length,
-      quick: data.hitsDistribution.quick.length,
-      extra: data.hitsDistribution.extra.length,
+      buster: data.hitsDistribution[2].length,
+      arts: data.hitsDistribution[1].length,
+      quick: data.hitsDistribution[3].length,
+      extra: data.hitsDistribution[4].length,
       np: damageNp ? noblePhantasm.npDistribution.length : 0
     },
     noblePhantasm: {
