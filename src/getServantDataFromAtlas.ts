@@ -1,12 +1,21 @@
-import { NiceJpServant, Skill } from './types/atlasAcademyResponses';
+import { Skill } from './types/atlasAcademyResponses';
 import { ParsedServant } from './types/others';
+import { niceJpServantSchema, NiceJpServantValidated } from './types/zodSchemas';
 
 export async function getServantDataFromAtlas(collectionNo: number) {
   const url = `https://api.atlasacademy.io/nice/JP/servant/${collectionNo}?lore=false`;
   const response = await fetch(url);
   if (response.status === 404) return null;
   if (!response.ok) throw new Error('Failed to fetch servant data');
-  const data = (await response.json()) as NiceJpServant;
+
+  const rawData = await response.json();
+  const parseResult = niceJpServantSchema.safeParse(rawData);
+
+  if (!parseResult.success) {
+    throw new Error(`Invalid servant data format: ${parseResult.error.message}`);
+  }
+
+  const data = parseResult.data;
   const nps = getNoblePhantasms(data.noblePhantasms);
   if (nps.size === 1) {
     return [parseServant(data, Array.from(nps.values())[0]!, data.id.toString(), undefined)];
@@ -22,8 +31,8 @@ export async function getServantDataFromAtlas(collectionNo: number) {
 }
 
 // 色・単体/全体の組み合わせで最も高いダメージを与えるNPを取得
-function getNoblePhantasms(noblePhantasms: NiceJpServant['noblePhantasms']) {
-  const nps: Map<string, NiceJpServant['noblePhantasms'][number]> = new Map();
+function getNoblePhantasms(noblePhantasms: NiceJpServantValidated['noblePhantasms']) {
+  const nps: Map<string, NiceJpServantValidated['noblePhantasms'][number]> = new Map();
 
   for (const np of noblePhantasms) {
     const npFunc = np.functions.find((f) => f.funcType.startsWith('damageNp'));
@@ -52,8 +61,8 @@ function getNoblePhantasms(noblePhantasms: NiceJpServant['noblePhantasms']) {
 }
 
 function parseServant(
-  data: NiceJpServant,
-  noblePhantasm: NiceJpServant['noblePhantasms'][number],
+  data: NiceJpServantValidated,
+  noblePhantasm: NiceJpServantValidated['noblePhantasms'][number],
   id: string,
   anotherVersionName: string | undefined
 ): ParsedServant {
