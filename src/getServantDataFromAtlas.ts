@@ -46,7 +46,7 @@ function getNoblePhantasms(noblePhantasms: NiceJpServantValidated['noblePhantasm
     if (!existingNp) {
       nps.set(key, np);
     }
-    const npValue = npFunc.svals[npFunc.svals.length - 1]!.Value;
+    const npValue = npFunc.svals[npFunc.svals.length - 1]!.Value ?? 0;
     const existingNpValue = existingNp
       ? (existingNp.functions.find((f) => f.funcType.startsWith('damageNp'))?.svals.slice(-1)[0]?.Value ?? 0)
       : 0;

@@ -19,7 +19,7 @@ const skillFunctionSchema = z.object({
 });
 
 const npSValSchema = z.object({
-  Value: z.number(),
+  Value: z.number().optional(),
   Correction: z.number().optional()
 });
 
