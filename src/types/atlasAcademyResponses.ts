@@ -1,7 +1,7 @@
 interface SkillSVal {
-  Turn: number;
-  Count: number;
-  Value: number;
+  Turn?: number | undefined | null;
+  Count?: number | undefined | null;
+  Value?: number | undefined | null;
 }
 
 interface Buff {

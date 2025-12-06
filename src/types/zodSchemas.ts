@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 const skillSValSchema = z.object({
-  Turn: z.number(),
-  Count: z.number(),
-  Value: z.number()
+  Turn: z.number().optional(),
+  Count: z.number().optional(),
+  Value: z.number().optional()
 });
 
 const buffSchema = z.object({

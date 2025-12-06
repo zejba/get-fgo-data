@@ -14,14 +14,10 @@ async function main() {
 
   const newData: ParsedServant[] = [];
   for (let collectionNo = lastCollectionNo + 1; ; collectionNo++) {
-    try {
-      const data = await getServantDataFromAtlas(collectionNo);
-      if (!data) break;
-      console.log('新しいサーヴァントを取得:', data.map((s) => s.name).join(', '));
-      newData.push(...data);
-    } catch (e) {
-      console.error(`Error fetching data for collectionNo: ${collectionNo}`, e);
-    }
+    const data = await getServantDataFromAtlas(collectionNo);
+    if (!data) break;
+    console.log('新しいサーヴァントを取得:', data.map((s) => s.name).join(', '));
+    newData.push(...data);
   }
   if (newData.length === 0) {
     console.log('新しいデータは見つかりませんでした');

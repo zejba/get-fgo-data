@@ -120,12 +120,12 @@ function parseClassPassive(skill: Skill) {
       const usedForCalcBuff = usedForCalcBuffs.find((b) => b.id === buff.id);
       if (!usedForCalcBuff) return [];
       const lastSval = func.svals[func.svals.length - 1]!;
-      const value = usedForCalcBuff.type === 'damagePlus' ? lastSval.Value : lastSval.Value / 10;
+      const value = usedForCalcBuff.type === 'damagePlus' ? (lastSval.Value ?? 0) : (lastSval.Value ?? 0) / 10;
       return {
         type: usedForCalcBuff.type,
         value,
-        turn: lastSval.Turn,
-        count: lastSval.Count
+        turn: lastSval.Turn ?? -1,
+        count: lastSval.Count ?? -1
       };
     });
   });
