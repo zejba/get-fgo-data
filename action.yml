@@ -5,5 +5,5 @@ inputs:
     description: 'Path to the servant data json file'
     required: true
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/updateServantDataJson/index.js'
