@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { getServantDataFromAtlas } from './getServantDataFromAtlas';
-import { ParsedServant } from './types/others';
+import { ParsedServant } from './types/parsedServant';
 
 const path = 'target_repository/data/servant_data.csv';
 

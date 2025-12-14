@@ -1,45 +1,36 @@
-interface SkillSVal {
-  Turn?: number | undefined | null;
-  Count?: number | undefined | null;
-  Value?: number | undefined | null;
+interface DataVal {
+  Turn?: number;
+  Count?: number;
+  Value?: number;
+  Correction?: number;
 }
 
 interface Buff {
   id: number;
 }
 
-interface SkillFunction {
+interface Func {
   funcType: string;
   funcTargetType: string;
   funcTargetTeam: string;
   buffs: Buff[];
-  svals: SkillSVal[];
+  svals: DataVal[];
 }
 
-interface NpSVal {
-  Value: number;
-  Correction?: number;
-}
-
-interface NpFunction {
-  funcType: string;
-  funcTargetType: string;
-  svals: NpSVal[];
-}
-
-interface NoblePhantasm {
+export interface NoblePhantasm {
   card: '1' | '2' | '3';
+  name: string;
   npGain: {
     np: number[];
   };
   npDistribution: number[];
-  functions: NpFunction[];
+  functions: Func[];
 }
 
 export interface Skill {
   id: number;
   name: string;
-  functions: SkillFunction[];
+  functions: Func[];
 }
 
 export interface NiceJpServant {
@@ -53,10 +44,10 @@ export interface NiceJpServant {
   atkGrowth: number[];
   starGen: number;
   hitsDistribution: {
-    1: number[]; // arts
-    2: number[]; // buster
-    3: number[]; // quick
-    4: number[]; // extra
+    '1': number[]; // arts
+    '2': number[]; // buster
+    '3': number[]; // quick
+    '4': number[]; // extra
   };
   cards: string[];
   noblePhantasms: NoblePhantasm[];

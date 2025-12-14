@@ -1,6 +1,6 @@
-import { Skill } from './types/atlasAcademyResponses';
-import { ParsedServant } from './types/others';
-import { niceJpServantSchema, NiceJpServantValidated } from './types/zodSchemas';
+import { NiceJpServant, NoblePhantasm, Skill } from './types/atlasAcademyResponses';
+import { ParsedServant } from './types/parsedServant';
+import { niceJpServantSchema } from './types/zodSchemas';
 
 export async function getServantDataFromAtlas(collectionNo: number) {
   const url = `https://api.atlasacademy.io/nice/JP/servant/${collectionNo}?lore=false`;
@@ -9,13 +9,13 @@ export async function getServantDataFromAtlas(collectionNo: number) {
   if (!response.ok) throw new Error('Failed to fetch servant data');
 
   const rawData = await response.json();
-  const parseResult = niceJpServantSchema.safeParse(rawData);
+  const validatedResult = niceJpServantSchema.safeParse(rawData);
 
-  if (!parseResult.success) {
-    throw new Error(`Invalid servant data format: ${parseResult.error.message}`);
+  if (!validatedResult.success) {
+    throw new Error(`Invalid servant data format: ${validatedResult.error.message}`);
   }
 
-  const data = parseResult.data;
+  const { data } = validatedResult;
   const nps = getNoblePhantasms(data.noblePhantasms);
   if (nps.size === 1) {
     return [parseServant(data, Array.from(nps.values())[0]!, data.id.toString(), undefined)];
@@ -31,8 +31,8 @@ export async function getServantDataFromAtlas(collectionNo: number) {
 }
 
 // 色・単体/全体の組み合わせで最も高いダメージを与えるNPを取得
-function getNoblePhantasms(noblePhantasms: NiceJpServantValidated['noblePhantasms']) {
-  const nps: Map<string, NiceJpServantValidated['noblePhantasms'][number]> = new Map();
+function getNoblePhantasms(noblePhantasms: NoblePhantasm[]) {
+  const nps: Map<string, NoblePhantasm> = new Map();
 
   for (const np of noblePhantasms) {
     const npFunc = np.functions.find((f) => f.funcType.startsWith('damageNp'));
@@ -61,8 +61,8 @@ function getNoblePhantasms(noblePhantasms: NiceJpServantValidated['noblePhantasm
 }
 
 function parseServant(
-  data: NiceJpServantValidated,
-  noblePhantasm: NiceJpServantValidated['noblePhantasms'][number],
+  data: NiceJpServant,
+  noblePhantasm: NoblePhantasm,
   id: string,
   anotherVersionName: string | undefined
 ): ParsedServant {

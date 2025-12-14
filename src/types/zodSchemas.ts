@@ -1,47 +1,38 @@
 import { z } from 'zod';
 
-const skillSValSchema = z.object({
+const dataValSchema = z.object({
   Turn: z.number().optional(),
   Count: z.number().optional(),
-  Value: z.number().optional()
+  Value: z.number().optional(),
+  Correction: z.number().optional()
 });
 
 const buffSchema = z.object({
   id: z.number()
 });
 
-const skillFunctionSchema = z.object({
+const funcSchema = z.object({
   funcType: z.string(),
   funcTargetType: z.string(),
   funcTargetTeam: z.string(),
   buffs: z.array(buffSchema),
-  svals: z.array(skillSValSchema)
-});
-
-const npSValSchema = z.object({
-  Value: z.number().optional(),
-  Correction: z.number().optional()
-});
-
-const npFunctionSchema = z.object({
-  funcType: z.string(),
-  funcTargetType: z.string(),
-  svals: z.array(npSValSchema)
+  svals: z.array(dataValSchema)
 });
 
 const noblePhantasmSchema = z.object({
   card: z.enum(['1', '2', '3']),
+  name: z.string(),
   npGain: z.object({
     np: z.array(z.number())
   }),
   npDistribution: z.array(z.number()),
-  functions: z.array(npFunctionSchema)
+  functions: z.array(funcSchema)
 });
 
 const skillSchema = z.object({
   id: z.number(),
   name: z.string(),
-  functions: z.array(skillFunctionSchema)
+  functions: z.array(funcSchema)
 });
 
 export const niceJpServantSchema = z.object({
