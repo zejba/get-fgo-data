@@ -2036,7 +2036,7 @@
     },
     "noblePhantasm": {
       "card": "buster",
-      "value": 500
+      "value": 600
     },
     "classPassive": [
       {
@@ -3578,7 +3578,7 @@
     "atkMax": 8958,
     "atk120": 12735,
     "starGen": 25.6,
-    "npGain": 0.28,
+    "npGain": 0.46,
     "hitCounts": {
       "buster": 6,
       "arts": 2,
@@ -3616,7 +3616,7 @@
     "atkMax": 6686,
     "atk120": 10628,
     "starGen": 25.5,
-    "npGain": 0.38,
+    "npGain": 0.48,
     "hitCounts": {
       "buster": 1,
       "arts": 3,
@@ -4791,7 +4791,7 @@
     "atkMax": 8460,
     "atk120": 12027,
     "starGen": 10.9,
-    "npGain": 0.16,
+    "npGain": 0.32,
     "hitCounts": {
       "buster": 6,
       "arts": 5,

@@ -21,6 +21,10 @@ export interface NoblePhantasm {
   card: '1' | '2' | '3';
   name: string;
   npGain: {
+    buster: number[];
+    arts: number[];
+    quick: number[];
+    extra: number[];
     np: number[];
   };
   npDistribution: number[];

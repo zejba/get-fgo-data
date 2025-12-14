@@ -23,6 +23,10 @@ const noblePhantasmSchema = z.object({
   card: z.enum(['1', '2', '3']),
   name: z.string(),
   npGain: z.object({
+    buster: z.array(z.number()),
+    arts: z.array(z.number()),
+    quick: z.array(z.number()),
+    extra: z.array(z.number()),
     np: z.array(z.number())
   }),
   npDistribution: z.array(z.number()),

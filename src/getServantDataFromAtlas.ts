@@ -8,7 +8,10 @@ export async function getServantDataFromAtlas(collectionNo: number) {
   if (response.status === 404) return null;
   if (!response.ok) throw new Error('Failed to fetch servant data');
 
-  const rawData = await response.json();
+  const rawData = (await response.json()) as any;
+  if (rawData.type === 'enemyCollectionDetail') {
+    return [];
+  }
   const validatedResult = niceJpServantSchema.safeParse(rawData);
 
   if (!validatedResult.success) {
@@ -74,12 +77,12 @@ function parseServant(
     anotherVersionName,
     name: data.name,
     rarity: data.rarity,
-    className: data.className.startsWith('beast') ? 'beast' : data.className,
+    className: data.className.toLowerCase().includes('beast') ? 'beast' : data.className,
     attribute: data.attribute,
     atkMax: data.atkMax,
     atk120: data.atkGrowth[data.atkGrowth.length - 1]!,
     starGen: data.starGen / 10,
-    npGain: noblePhantasm.npGain.np[0]! / 100,
+    npGain: noblePhantasm.npGain.buster[0]! / 100,
     hitCounts: {
       buster: data.hitsDistribution[2].length,
       arts: data.hitsDistribution[1].length,
