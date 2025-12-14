@@ -33,7 +33,7 @@ jobs:
       - name: Run update script
         uses: ./
         with:
-          path: target_repository/src/data/servant_data.json
+          servantDataJSONPath: target_repository/src/data/servant_data.json
 
       - name: Commit and push changes
         run: |
