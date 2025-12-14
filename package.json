@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "ncc build src/updateServantDataJson.ts -o dist/updateServantDataJson",
-    "dev": "INPUT_JSONPATH=output/servant_data.json tsx src/updateServantDataJson.ts"
+    "dev": "INPUT_SERVANTDATAJSONPATH=output/servant_data.json tsx src/updateServantDataJson.ts"
   },
   "keywords": [],
   "author": "",
