@@ -15963,49 +15963,5 @@
         "count": -1
       }
     ]
-  },
-  {
-    "aaId": 2801200,
-    "id": "2801200",
-    "collectionNo": 459,
-    "name": "ソロモン",
-    "rarity": 5,
-    "className": "pretender",
-    "attribute": "earth",
-    "atkMax": 11444,
-    "atk120": 14704,
-    "starGen": 20,
-    "npGain": 0.54,
-    "hitCounts": {
-      "buster": 5,
-      "arts": 4,
-      "quick": 5,
-      "extra": 6,
-      "np": 3
-    },
-    "noblePhantasm": {
-      "card": "buster",
-      "value": 500
-    },
-    "classPassive": [
-      {
-        "type": "artsBuff",
-        "value": 4,
-        "turn": -1,
-        "count": -1
-      },
-      {
-        "type": "starGetBuff",
-        "value": 10,
-        "turn": -1,
-        "count": -1
-      },
-      {
-        "type": "criticalBuff",
-        "value": 2,
-        "turn": -1,
-        "count": -1
-      }
-    ]
   }
 ]
