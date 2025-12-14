@@ -2,8 +2,10 @@
   "name": "get-fgo-data",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "ncc build src/updateServantDataJson.ts -o dist/updateServantDataJson",
+    "dev": "INPUT_JSONPATH=output/servant_data.json tsx src/updateServantDataJson.ts"
   },
   "keywords": [],
   "author": "",
@@ -11,11 +13,13 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^24.5.2",
+    "@vercel/ncc": "^0.38.4",
     "prettier": "^3.6.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@actions/core": "^2.0.1",
     "zod": "^4.1.12"
   }
 }

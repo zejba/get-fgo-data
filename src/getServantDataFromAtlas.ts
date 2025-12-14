@@ -1,6 +1,6 @@
-import { NiceJpServant, NoblePhantasm, Skill } from './types/atlasAcademyResponses';
-import { ParsedServant } from './types/parsedServant';
-import { niceJpServantSchema } from './types/zodSchemas';
+import { NiceJpServant, NoblePhantasm, Skill } from './types/atlasAcademyResponses.js';
+import { ParsedServant } from './types/parsedServant.js';
+import { niceJpServantSchema } from './types/zodSchemas.js';
 
 export async function getServantDataFromAtlas(collectionNo: number) {
   const url = `https://api.atlasacademy.io/nice/JP/servant/${collectionNo}?lore=false`;

@@ -1,0 +1,9 @@
+name: 'Update Servant Data JSON'
+description: 'Update FGO servant data JSON file from Atlas Academy API'
+inputs:
+  servantDataJSONPath:
+    description: 'Path to the servant data json file'
+    required: true
+runs:
+  using: 'node20'
+  main: 'dist/updateServantDataJson/index.js'

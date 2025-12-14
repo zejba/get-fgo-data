@@ -1,10 +1,12 @@
-import { getServantDataFromAtlas } from './getServantDataFromAtlas';
-import { ParsedServant } from './types/parsedServant';
+import { getServantDataFromAtlas } from './getServantDataFromAtlas.js';
+import { ParsedServant } from './types/parsedServant.js';
+import * as core from '@actions/core';
 import fs from 'fs';
 
-const path = 'target_repository/src/data/servant_data.json';
+async function run() {
+  const path = core.getInput('servantDataJSONPath', { required: true });
+  core.info(`対象ファイル: ${path}`);
 
-async function main() {
   const oldJson = fs.readFileSync(path, 'utf-8');
   const oldData = JSON.parse(oldJson);
   if (!Array.isArray(oldData)) {
@@ -19,19 +21,21 @@ async function main() {
   for (let collectionNo = lastCollectionNo + 1; ; collectionNo++) {
     const data = await getServantDataFromAtlas(collectionNo);
     if (!data) break;
-    console.log('新しいサーヴァントを取得:', data.map((s) => s.name).join(', '));
+    core.info(`新しいサーヴァントを取得: ${data.map((s) => s.name).join(', ')}`);
     newData.push(...data);
   }
   if (newData.length === 0) {
-    console.log('新しいデータは見つかりませんでした');
+    core.info('新しいデータは見つかりませんでした');
     return;
   }
 
   const json = JSON.stringify([...oldData, ...newData], null, 2);
   fs.writeFileSync(path, json, 'utf-8');
+  core.info(`${newData.length}件の新しいサーヴァントを追加しました`);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+try {
+  await run();
+} catch (e) {
+  core.setFailed(e instanceof Error ? e.message : String(e));
+}
